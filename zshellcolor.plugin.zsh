@@ -1,11 +1,17 @@
 
 # zshellcolor — Zsh plugin to dynamically change terminal background color
-# Author: Rival89 (Refactored)
+# Author: Rival89 (Enhanced with Debugging and Forced Initialization)
 
 : "${DEFAULT_SHELLCOLOR:=#000000}"
-: "${SHELLCOLOR_DEBUG:=0}"
+: "${SHELLCOLOR_DEBUG:=1}"
 
-# Color name to hex map with improved handling of spaces
+# Check Zsh version compatibility
+if [[ -z "$ZSH_VERSION" || "$ZSH_VERSION" < "5.0" ]]; then
+  echo "[zshellcolor] Warning: Your Zsh version is older than 5.0, which may not support associative arrays."
+fi
+
+# Force initialization of color map with debug output
+echo "[zshellcolor] Initializing color map..."
 typeset -A SHELLCOLOR_NAMES=(
   red         "#FF0000"
   green       "#00FF00"
@@ -23,6 +29,13 @@ typeset -A SHELLCOLOR_NAMES=(
   darkgray    "#404040"
   brown       "#8B4513"
 )
+
+# Verify initialization
+if [[ -z "${SHELLCOLOR_NAMES[red]}" ]]; then
+  echo "[zshellcolor] ERROR: Failed to initialize color map. Associative array not loaded."
+else
+  echo "[zshellcolor] Color map loaded successfully."
+fi
 
 # Normalize input: remove whitespace, lowercase, and remove extra spaces
 normalize_color_name() {
@@ -47,9 +60,7 @@ lookup_color() {
   fi
 
   # Invalid color, return empty
-  if [[ "$SHELLCOLOR_DEBUG" == 1 ]]; then
-    echo "[zshellcolor] Invalid color name or hex: '$1'"
-  fi
+  echo "[zshellcolor] Invalid color name or hex: '$1'"
   echo ""
 }
 
