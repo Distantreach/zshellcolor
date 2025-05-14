@@ -16,7 +16,7 @@
 : "${PERIOD:=60}"                   # Default cycle interval in seconds for @cycle mode (if not already set)
 
 # Color name to hex map (expanded with additional common color names)
-typeset -A SHELLCOLOR_NAMES=(
+typeset -g -A SHELLCOLOR_NAMES=(
   red         "#FF0000"
   green       "#00FF00"
   blue        "#0000FF"
